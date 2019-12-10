@@ -106,6 +106,7 @@ open class ApolloPlugin : Plugin<Project> {
 
           compilationUnit.outputDir.set(codegenProvider.flatMap { it.outputDir })
           compilationUnit.transformedQueriesDir.set(codegenProvider.flatMap { it.transformedQueriesOutputDir })
+          compilationUnit.operationOutputDir.set(codegenProvider.flatMap { it.operationOutputDir })
 
           apolloExtension.compilationUnits.add(compilationUnit)
         }
@@ -187,6 +188,15 @@ open class ApolloPlugin : Plugin<Project> {
           }
           disallowChanges()
         }
+        it.operationOutputDir.apply {
+          if (compilerParams.generateOperationOutput.getOrElse(false)) {
+            set(project.layout.buildDirectory.map {
+              it.dir("generated/operationOutput/apollo/${compilationUnit.variantName}/${compilationUnit.serviceName}")
+            })
+          }
+          disallowChanges()
+        }
+
         it.generateAsInternal.set(compilerParams.generateAsInternal)
         Unit
       }
