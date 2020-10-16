@@ -98,3 +98,9 @@ tasks.named("javadoc").configure {
    */
   (this as Javadoc).isFailOnError = false
 }
+
+tasks.findByName("allTests")?.let {
+  println("disabling: ${it.name}")
+  it.enabled = false
+  it.onlyIf { false }
+}
